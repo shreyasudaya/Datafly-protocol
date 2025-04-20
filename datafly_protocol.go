@@ -1,10 +1,28 @@
 package main
 
 import (
+	"bytes"
 	"crypto/sha256"
 	"encoding/hex"
 	"fmt"
+	"io"
+	"os"
 )
+
+func CaptureOutput(w io.Writer, fn func()) {
+	stdout := os.Stdout
+	r, wPipe, _ := os.Pipe()
+	os.Stdout = wPipe
+
+	fn()
+
+	wPipe.Close()
+	os.Stdout = stdout
+
+	var buf bytes.Buffer
+	io.Copy(&buf, r)
+	fmt.Fprint(w, buf.String())
+}
 
 func DataFlyProtocol(patient *Patient, doctor *Doctor, source *Blockchain, dest *Blockchain, data string) {
 	fmt.Println("[DataFly] Starting data migration...")
