@@ -37,6 +37,13 @@ func main() {
 	DataFlyProtocol(patient, doctor, sourceChain, destChain, dataToMigrate)
 	elapsed := time.Since(start)
 
+	fmt.Println("--- DataFly Simulation Experiments ---")
+
+	BaselinePerformanceTest()
+	ThroughputTest(100)
+	FailureCaseSimulation()
+	MultiPartyConsensusTest(7)
+
 	fmt.Println("[METRICS] Latency:", elapsed)
 	fmt.Println("[METRICS] Total Transactions:",
 		sourceChain.TransactionCount+destChain.TransactionCount)
